@@ -1,0 +1,31 @@
+-- Testet ob String Präfix von einem anderne String ist
+isPrefix:: String -> String -> Bool
+isPrefix [] xs = True
+isPrefix xs [] = False
+isPrefix (x:xs) (y:ys)
+ | x==y = isPrefix xs ys
+ | otherwise = False 
+
+-- wie oft taucht xs in xy auf einfach?
+countPattern:: String -> Char -> Int
+countPattern [] find = 0
+countPattern (x:xs) find 
+ | find == x = 1 + countPattern xs find
+ | otherwise = countPattern xs find
+ 
+-- sum [1,2,3,4] == 10
+-- hier produzieren wir erstmal die teilstrings
+--hier vergleiche wir die substrings mit hilfe isPrefix
+countP:: String -> String -> Int
+countP mask string = sub $ tails string
+ where 
+  sub (x:xs) 
+   | x == "" && mask == "" = 1
+   | x == "" = 0  
+   | isPrefix mask x = 1 + sub xs
+   | otherwise = sub xs
+
+-- macht aus "abc" -> "abc", "bc", "c", ""
+tails:: [a] -> [[a]]
+tails [] = [[]]
+tails (x:xs) = [(x:xs)] ++ tails xs
