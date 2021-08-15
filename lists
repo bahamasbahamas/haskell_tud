@@ -1,0 +1,71 @@
+-- Schnittmenge von zwei Listen 
+com:: [Int] -> [Int] -> [Int]
+com [] xs = []
+com xs ys =  [x | x<- xs, y<-ys, x==y ]
+
+-- Schnittmenge von zwei Listen 
+comm:: [Int] -> [Int] -> [Int]
+comm [] xs = [] 
+comm (x:xs) (y:ys) 
+ | x == y = [x] ++ comm xs ys
+ | otherwise = comm xs ys 
+
+--filter doppelte Einträge in einer Liste, entnimmt erstes Element einer Liste und Filtert die Restliste ohne eben dieses Element und ruft die Funktion erneurt mit der gefilterten Liste ohne dieses Element auf
+fil [] = []
+fil (x:xs) = x : fil (filter (/=x) xs)
+
+-- mapped typ a auf typ b, output : [[1],[2],[3]]
+-- map (\x -> [x]) [1,2,3]
+
+-- dreht list um und filtert alle Zahlen <1 raus
+list:: [Int]-> [Int]
+list [] = []
+list xs = (filterzero . rev) xs 
+
+--filtert zahlen <0 aus
+filterzero:: [Int]-> [Int]
+filterzero [] = []
+filterzero xs = filter (\x -> x>=0) xs
+
+-- revert
+rev:: [Int]->[Int]
+rev [] = []
+rev (x:xs) = rev xs ++ [x]
+
+-- testet ob Liste aufsteigend sortiert (ordered)
+isOrd:: [Int] -> Bool
+isOrd [] = True
+isOrd [x] = True
+isOrd (x:y:xs)
+ | x<=y = isOrd (y:xs)
+ | otherwise = False
+
+-- merged zwei listen aufsteigend sortiert
+merge:: [Int] -> [Int] -> [Int]
+merge [] ys = ys
+merge xs [] = xs
+merge (x:xs) (y:ys)
+ | x<=y = x : merge xs (y:ys)
+ | otherwise = y : merge (x:xs) ys
+
+-- list comprehensions
+sum2:: [Int]->[Int]
+sum2 xs = [2*x | x<- xs]
+
+--keine ahnung mehr
+f:: [Int] -> Int
+f list = foldr (+) 0 $ map (^2) $ filter even list
+
+-- ["hellostackoverflow"]
+mon = [["hello", "stack", "overflow"] >>= id]
+
+--keine ahnung mehr
+li = [(x,y) | x<- [1,2,3], y<-[2,3,4], z <- 1,  x>2 ]
+
+-- wendet eine liste von funktionen auf jedes element aus einer liste --an
+-- z.B.:  apps [(\x -> x+x), (\x -> x*10) ] [1,2,3]
+-- Unterschied concatMap ??? 
+apps:: [(a->b)] -> [a] -> [b]
+apps fs [] = []
+apps [] xs = []
+apps (f:fs) xs = map f xs ++ apps fs xs  
