@@ -1,0 +1,15 @@
+-- find subset elements in input list mit eigenem Datentyp
+data CV = C Char | V Int
+subst :: [[Char]] ->[CV] ->[Char]
+subst xs [] = []
+subst xs ((C y):ys) = [y] ++(subst xs ys) 
+
+-- definition der natürliche Zahlen 
+data Nat = Zero | Suc Nat
+ deriving Show
+
+-- sum Funktion für natürliche Zahlen
+sumn ::Nat -> Nat -> Nat 
+sumn Zero x = x
+sumn x Zero = x
+sumn (Suc x) (Suc y) = sumn x (Suc(Suc y)) 
