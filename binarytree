@@ -1,0 +1,95 @@
+data BinTree = Branch Int BinTree BinTree | Nil deriving Show 
+
+-- Tree 1
+mytree = Branch 0 
+ Nil (Branch 3 
+  (Branch 1 Nil Nil) (Branch 5 Nil Nil))
+
+-- Tree 2
+mytree2 = Branch 0 (Branch (-2) Nil Nil) (Branch 3 Nil Nil)
+
+-- Tree Traversal (preorder)
+trav :: BinTree -> [Int]
+trav Nil = []
+trav (Branch h ch1 ch2) = [h] ++ trav ch1 ++ trav ch2 
+
+-- Vergleicht zwei BinTrees 
+testTree :: BinTree -> BinTree -> Bool
+testTree Nil Nil = True
+testTree t Nil = False
+testTree Nil t = False
+testTree (Branch h ch1 ch2) (Branch h2 ch3 ch4)
+ | h == h2 = testTree ch1 ch3 && testTree ch2 ch4
+ | otherwise = False
+
+-- Fügt Elemente in BinTree ein, Sucheigenschaften bleiben erhalten
+insert :: BinTree -> Int -> BinTree
+insert Nil zahl = (Branch zahl Nil Nil)
+insert (Branch h ch1 ch2) x
+ | x <= h = (Branch h (insert ch1 x) ch2)
+ | otherwise = (Branch h ch1 (insert ch2 x))
+
+-- Liste von Zahlen in BinTree einfügen
+insert2 :: BinTree -> [Int] -> BinTree
+insert2 t [] = t
+insert2 t (x:xs) = insert2 (insert t x) xs 
+
+-- Kopf des Knoten wird mit Liste der Vorgängerknoten ersetzt
+path::BinTree a -> BinTree [a]
+path t = paths t
+
+-- die leere Liste dient hier als Speicher
+paths t = paths' t []
+ where
+  paths' :: BinTree a -> [a] -> BinTree [a]
+  paths' (Leaf x) store = Leaf (store ++ [x])
+  paths' (Branch x t_left t_right) store =
+   (Branch (store ++[x]) (paths' t_left (store ++ [x]))             
+                         (paths' t_right (store ++ [x])))   
+                         
+data BinTree a = Branch a (BinTree a) (BinTree a) | Leaf a 
+ deriving Show
+
+tree = Branch 7 
+ (Branch 3 
+   (Leaf 1) 
+   (Branch 5 
+     (Leaf 4) (Leaf 6))) 
+ (Branch 10 
+   (Leaf 8) (Leaf 11))
+
+tree2 = Branch 7 (Leaf 1) (Leaf 2)
+
+tree3 = Leaf 0
+
+-- wenn oben BinTree a definiert wird muss das auch so hier stehen
+-- zähl die Anzahl der leafs 
+depth:: BinTree a -> Int
+depth (Leaf _) = 1
+depth (Branch a t_left t_right) = 0 + depth t_left + depth t_right
+
+-- kürzester bzw. längster Pfad wenn min gegen max gestauscht wird
+depthh:: BinTree a -> Int
+depthh (Leaf _) = 1
+depthh (Branch _ t_left t_right) =
+  min (depthh t_left) (depthh t_right) + 1
+
+-- paths :: BinTree a -> BinTree [a]
+
+-- Kopf des Knoten wird mit Liste der Vorgängerknoten ersetzt
+path::BinTree a -> BinTree [a]
+path t = paths' t []
+-- Hilfsfunktion leere Liste dient hier als leere Speicher 
+paths' :: BinTree a -> [a] -> BinTree [a]
+paths' (Leaf x) store = Leaf (store ++ [x])
+paths' (Branch x t_left t_right) store = 
+  (Branch (store ++[x]) (paths' t_left (store ++ [x])) 
+                        (paths' t_right (store ++ [x]))) 
+
+-- wandelt einen BinTree vom Typ a in einen BinTree mit Typ b um
+-- tmap (show::Integer-> String) tree; wandelt Int BinTree to String
+-- alternativ von String to Int ist read::String->Int
+tmap:: (a->b) -> BinTree a -> BinTree b
+tmap f (Leaf x) = Leaf (f x)
+tmap f (Branch x t_left t_right) = 
+ (Branch (f x) (tmap f t_left) (tmap f t_right)) 
