@@ -1,0 +1,60 @@
+-- Fibonacci
+fib:: Int-> Int
+fib 0=1
+fib 1= 1
+fib n =fib(n-2)+ fib (n-1)
+
+-- Falkutät
+fac:: Int-> Int
+fac 1 = 1
+fac x = x * fac (x-1)
+
+-- Falkutät
+fac2:: Int-> Int
+fac2 x 
+ | x <= 1 = 1
+ | otherwise = x * fac2 (x-1)
+
+-- Falkutät
+fac3:: Int-> Int 
+fac3 x = sub x 1
+ where 
+  sub x store
+   | x <= 1 = store
+   | otherwise = sub (x-1) (x*store)
+
+-- Falkutät von Zahl x bis y 
+sumfac:: Int -> Int -> Int 
+sumfac y z 
+ | y==z = fac y
+ | otherwise = fac y + sumfac (y+1) z
+-- summiert die ersten n zahlen alternierend *-1, *1
+sumsq:: Int -> Int
+sumsq 0 = 0
+sumsq n = ((-1)^n *n) + sumsq (n-1)  
+
+
+--- Sequence: [1,2,n,(1+2+n),(2+n+(1+2+n)),(n+ (n+2+n)+ (2+n+(1+2+n)))...]
+--- folge n calculates the nth element of the sequence
+folge:: Int -> Int
+folge 1 = 1
+folge 2 = 2
+folge n = f [1,2,n] n 
+ where 
+  f xs 3 = last xs
+  f xs n = f (xs ++ [sum $ take 3 $ reverse xs]) (n-1)
+  
+-- fib with infinite list
+fibs = 0 : 1 : zipWith (+) fibs (tail fibs) 
+  
+-- nat numbers
+nat = asc 1
+ where 
+  asc n = n : asc (n+1)
+
+--Histogramm
+--  an der ersten Stelle der neuen Liste steht die Anzahl aller einsen der inputliste, an der zweiten Stelle steht die Anzahl aller zweien in der inputlist etc. (Histogram), "iri" interiert über die unendliche Liste der nat. Zahlen. Aufruf geht zum Beispiel mit take 5 (ili [1,2,2,2])
+ili:: [Int] -> [Int]
+ili inputlist = f nat
+ where 
+  f (x:xs) =  [length(filter (==x) inputlist)] ++ f xs
