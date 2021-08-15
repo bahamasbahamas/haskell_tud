@@ -1,0 +1,66 @@
+-- multi tree
+data Tree = Node [Tree]
+
+t = Node [Node [], 
+          Node [
+                 Node [],
+                 Node [], 
+                 Node [
+                        Node[],
+                        Node[],
+                        Node[],
+                        Node[],
+                        Node[]]]]
+
+
+-- iterate multitree, Ergeniss ist 5 für Treee t, gibt max Childs für gesamten Baum zurück
+maxtree:: Tree -> Int
+maxtree (Node xs) = sub xs
+ where 
+  sub [] = length xs
+  sub (t:ts) = max (maxtree t) (sub ts)
+  
+-- Definition für nested tree
+data RoseTree = Node Int [RoseTree]
+ deriving Show
+
+-- noch ein RoseTree  5-> (3, 4-> (2, 0) , 1) mit 4 Blättern
+treex = Node 5 [ Node 3 [], Node 4 [Node 2 [], Node 0 []], Node 1 []]
+
+treex2 = Node 5 [ Node 3
+                   [Node 0 [], Node 2 []],
+                  Node 4 
+                   [Node 2 [], Node 0 []]]
+
+rtree = Node 2 [rtree2, rtree3]
+rtree2 = Node 1 [rtree4] 
+rtree3 = Node 3 []
+rtree4 = Node 4 []
+
+-- interate roseTree
+itt :: RoseTree -> [Int]
+itt (Node x []) = [x]
+itt (Node x (t:ts)) = [x] ++ itt t ++ sub ts
+ where 
+  sub [] = []
+  sub (a:as) = itt a ++ sub as
+  
+-- zählt Anzahl der Blätter
+countLeaves :: RoseTree -> Int
+countLeaves (Node i []) = 1
+countLeaves (Node i (x:xs)) = 0 + countLeaves x + sub xs
+ where 
+  -- hier ist ja einfach die liste der childs leer
+  sub [] = 0
+  sub (y:ys) = countLeaves y + sub ys
+
+-- Gibt True zurück wenn die Anzahl aller Subtrees gerade ist
+evenNodes :: RoseTree -> Bool
+evenNodes (Node _ []) = True
+evenNodes (Node _ ts)
+-- Wenn die Länge der Liste ungerade ist dann gib False zurück
+ | (even $ length ts) /= True = False
+ | otherwise = sub ts
+  where
+   sub [] = True
+   sub (x:xs) = evenNodes x && sub xs 
