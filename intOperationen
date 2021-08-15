@@ -1,0 +1,16 @@
+-- Zahle in range von min und max
+in_range min max x = ilb && iub
+ where 
+  ilb = min <= x
+  iub = max >= x
+  
+  -- summe von n+1 Quadratzahlen
+su:: Int -> Int-> Int
+su 0 x2 = x2
+su x1 x2 = su (x1-1) (((x1+1)^2)+x2)
+
+-- an welche stelle stelle steht das gesuchte Element
+retrive:: [Int] -> Int -> Int
+retrive (x:xs) a
+ | x == a = 1
+ | otherwise = 1 + (retrive xs a)  
